@@ -1,25 +1,6 @@
-kind: server
-name: office-powerpoint-mcp-server
-version: "1.0.0"
-
-runtime: container
-
+runtime: "container"
 build:
-  dockerfile: Dockerfile        # если у тебя уже есть – оставь как было
+  dockerfile: "Dockerfile"
   dockerBuildPath: "."
-
 startCommand:
-  type: http                    # важно: http, не stdio
-  command: python
-  args:
-    - ppt_mcp_server.py
-    - --transport
-    - http                      # включает Streamable HTTP
-    - --port
-    - "8000"
-  port: 8000                    # порт внутри контейнера
-
-# === ВАЖНО: добавить эти поля на верхнем уровне ===
-transport: streamable-http      # подсказываем Smithery тип транспорта
-path: /mcp                      # куда слать JSON-RPC (initialize, tools/call)
-health: /                       # можно оставить так, FastMCP обычно отвечает 404/200 – Smithery этого достаточно
+  type: "http"
