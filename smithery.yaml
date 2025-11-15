@@ -1,35 +1,21 @@
-# Конфиг Smithery для контейнерного Streamable HTTP MCP сервера
-kind: server
-name: "Office-PowerPoint-MCP-Server"
-version: "1.0.0"
+# Smithery config: описывает как запускать контейнер
 
-# Говорим Smithery, что сервер запускается в контейнере
+version: 1
+kind: server
+name: office-powerpoint-mcp-server
 runtime: container
 
+# Как билдить контейнер
 build:
-  dockerfile: "Dockerfile"
-  dockerBuildPath: "."
+  dockerfile: Dockerfile
 
-# Как Smithery должен "будить" сервер
+# Какой тип старта внутри Smithery (HTTP, а не stdio)
 startCommand:
-  # Тип старта — HTTP, а не stdio
   type: http
-  configSchema:
-    type: object
-    properties: {}
-    additionalProperties: false
-  exampleConfig: {}
 
-# Параметры Streamable HTTP
-# Важно: порт должен совпадать с EXPOSE / --port в Dockerfile
+# КОНФИГ HTTP-транспорта MCP (ВАЖНО: это верхний уровень, а не внутри startCommand)
 transport: streamable-http
 port: 8000
-
-# HTTP-пути.
-# У этого сервера по умолчанию RPC ходит по корневому пути ("/"),
-# поэтому path можно не задавать. Если захочешь — можно явно:
-# path: /
-# ssePath: /
-#
-# Health-чек – просто GET /
-health: /
+path: /mcp
+ssePath: /mcp
+health: /.well-known/mcp-config
