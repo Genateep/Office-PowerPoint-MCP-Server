@@ -1,6 +1,9 @@
-runtime: "container"
-build:
-  dockerfile: "Dockerfile"
-  dockerBuildPath: "."
-startCommand:
-  type: "http"
+mcpServers:
+  powerpoint:
+    label: "Office PowerPoint MCP Server"
+    transport: "streaming-http"
+    hosted:
+      startCommand:
+        type: http
+        port: 8000      # порт, на котором слушает сервер внутри контейнера
+        path: /          # или /mcp, если сервер слушает именно там
