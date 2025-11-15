@@ -1,16 +1,14 @@
-# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+kind: server
+name: powerpoint-mcp-server         # можешь назвать как хочешь
+version: 1.0.0
+runtime: container                  # важно: контейнерный рантайм
 
 startCommand:
-  type: stdio
-  configSchema:
-    # JSON Schema defining the configuration options for the MCP.
-    {}
-  commandFunction:
-    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
-    |-
-    (config) => ({
-      command: 'python',
-      args: ['ppt_mcp_server.py'],
-      env: {}
-    })
-  exampleConfig: {}
+  type: http                        # <-- ключевой момент: http, НЕ stdio
+
+# описание транспорта MCP
+transport: streamable-http          # этот сервер поддерживает Streamable HTTP
+port: 8000                          # внутренний порт в контейнере
+path: /                             # endpoint для JSON-RPC запросов
+ssePath: /                          # endpoint для SSE (если нужно)
+health: /                           # health-check (можно тоже оставить /)
