@@ -1,9 +1,16 @@
-mcpServers:
-  powerpoint:
-    label: "Office PowerPoint MCP Server"
-    transport: "streaming-http"
-    hosted:
-      startCommand:
-        type: http
-        port: 8000      # порт, на котором слушает сервер внутри контейнера
-        path: /          # или /mcp, если сервер слушает именно там
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+
+startCommand:
+  type: http
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    {}
+  commandFunction:
+    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
+    |-
+    (config) => ({
+      command: 'python',
+      args: ['ppt_mcp_server.py'],
+      env: {}
+    })
+  exampleConfig: {}
