@@ -434,7 +434,7 @@ if __name__ == "__main__":
         "-t",
         "--transport",
         type=str,
-        default="stdio",
+        default="http",
         choices=["stdio", "http", "sse"],
         help="Transport method for the MCP server (default: stdio)"
     )
