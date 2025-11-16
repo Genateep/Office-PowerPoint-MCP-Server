@@ -406,37 +406,39 @@ def get_server_info() -> Dict:
 def main(transport: str = "stdio", port: int = 8000):
     if transport == "http":
         import asyncio
-        # Set the port for HTTP transport
-        app.settings.port = port
-        # Start the FastMCP server with HTTP transport
         try:
-            app.run(transport='streamable-http')
+            # ВАЖНО: слушаем на 0.0.0.0, а не на 127.0.0.1
+            app.run(
+                transport="streamable-http",
+                host="0.0.0.0",
+                port=port,
+                path="/mcp",  # стандартный путь для streamable-http
+            )
         except asyncio.exceptions.CancelledError:
-            print("Server stopped by user.")
+            print("Server stopped by user (CancelledError).")
         except KeyboardInterrupt:
-            print("Server stopped by user.")
+            print("Server stopped by user (KeyboardInterrupt).")
         except Exception as e:
-            print(f"Error starting server: {e}")
-            
+            print(f"Error starting HTTP server: {e}")
+
     elif transport == "sse":
-        # Run the FastMCP server in SSE (Server Side Events) mode
-        app.run(transport='sse')
-        
+        app.run(transport="sse")
     else:
-        # Run the FastMCP server
-        app.run(transport='stdio')
+        app.run(transport="stdio")
+
 
 if __name__ == "__main__":
-    # Parse command line arguments
-    parser = argparse.ArgumentParser(description="MCP Server for PowerPoint manipulation using python-pptx")
+    parser = argparse.ArgumentParser(
+        description="MCP Server for PowerPoint manipulation using python-pptx"
+    )
 
     parser.add_argument(
         "-t",
         "--transport",
         type=str,
-        default="http",
+        default="http",   # <--- по умолчанию HTTP
         choices=["stdio", "http", "sse"],
-        help="Transport method for the MCP server (default: stdio)"
+        help="Transport method for the MCP server (default: http)",
     )
 
     parser.add_argument(
@@ -444,7 +446,9 @@ if __name__ == "__main__":
         "--port",
         type=int,
         default=8000,
-        help="Port to run the MCP server on (default: 8000)"
+        help="Port to run the MCP server on (default: 8000)",
     )
+
     args = parser.parse_args()
     main(args.transport, args.port)
+
